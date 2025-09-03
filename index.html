@@ -1,95 +1,65 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Art Science MNL</title>
-  <meta name="description" content="Art Science MNL — Robotics & Creative Science for Kids in Manila.">
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #fff;
-      color: #111;
-      line-height: 1.6;
-    }
-    header {
-      padding: 20px;
-      text-align: center;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .hero img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 4px;
-    }
-    .section {
-      margin: 40px 0;
-    }
-    h1, h2 {
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-    p {
-      margin: 0 0 16px;
-      font-size: 18px;
-    }
-    .contact {
-      margin-top: 40px;
-      font-size: 16px;
-    }
-    a {
-      color: #111;
-      text-decoration: none;
-      border-bottom: 1px solid #111;
-    }
-    a:hover {
-      opacity: 0.7;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 14px;
-      color: #777;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    Art Science MNL
-  </header>
+// Drawer
+const drawer = document.getElementById('drawer');
+const openBtn = document.getElementById('openDrawer');
+const closeBtn = drawer.querySelector('.close');
 
-  <main>
-    <section class="hero">
-      <!-- Replace with your own photo -->
-      <img src="https://via.placeholder.com/1200x700.png?text=Art+Science+MNL+Hero+Image" alt="Kids learning robotics">
-    </section>
+function openDrawer(){ drawer.classList.add('open'); document.body.style.overflow='hidden'; }
+function closeDrawer(){ drawer.classList.remove('open'); document.body.style.overflow=''; }
 
-    <section class="section">
-      <h1>Robotics & Creative Science for Kids in Manila</h1>
-      <p>
-        At <strong>Art Science MNL</strong>, we introduce children ages 5–12 to robotics, coding, and creative science.  
-        Through fun, project-based lessons, kids learn problem-solving, teamwork, and confidence while building their own robots.
-      </p>
-    </section>
+openBtn.addEventListener('click', openDrawer);
+closeBtn.addEventListener('click', closeDrawer);
+drawer.addEventListener('click', (e) => {
+  // close when clicking outside inner pane area
+  if(e.target === drawer) closeDrawer();
+});
 
-    <section class="section contact">
-      <h2>Contact</h2>
-      <p>Email: <a href="mailto:artsciencemnl@gmail.com">artsciencemnl@gmail.com</a></p>
-      <p>Facebook: <a href="https://facebook.com/ArtScienceMNL" target="_blank">facebook.com/ArtScienceMNL</a></p>
-    </section>
-  </main>
+// Search overlay
+const searchOverlay = document.getElementById('searchOverlay');
+const openSearch = document.getElementById('openSearch');
+const openSearchFromHeader = document.getElementById('openSearchFromHeader');
+const closeSearch = document.getElementById('closeSearch');
+const q = document.getElementById('q');
+const results = document.getElementById('results');
 
-  <footer>
-    © 2025 Art Science MNL
-  </footer>
-</body>
-</html>
+function showSearch(){
+  searchOverlay.classList.add('open');
+  q.value = '';
+  results.innerHTML = '';
+  setTimeout(()=> q.focus(), 50);
+}
+function hideSearch(){
+  searchOverlay.classList.remove('open');
+}
+
+openSearch?.addEventListener('click', showSearch);
+openSearchFromHeader?.addEventListener('click', showSearch);
+closeSearch?.addEventListener('click', hideSearch);
+searchOverlay.addEventListener('click', (e)=>{ if(e.target === searchOverlay) hideSearch(); });
+
+// Tiny on-page search (matches data-search paragraphs and headings)
+const searchable = Array.from(document.querySelectorAll('[data-search], .text h1, .text h2'));
+
+q?.addEventListener('input', () => {
+  const term = q.value.trim().toLowerCase();
+  results.innerHTML = '';
+  if(!term){ return; }
+  let count = 0;
+  searchable.forEach(el => {
+    const txt = el.textContent.toLowerCase();
+    if(txt.includes(term)){
+      count++;
+      const id = el.closest('section')?.id || 'top';
+      const preview = el.textContent.trim().slice(0, 140);
+      const div = document.createElement('div');
+      div.className = 'hit';
+      div.innerHTML = `<a href="#${id}" onclick="document.getElementById('closeSearch').click()">${preview}</a>`;
+      results.appendChild(div);
+    }
+  });
+  if(count === 0){
+    const div = document.createElement('div');
+    div.className='hit';
+    div.textContent = 'No matches found.';
+    results.appendChild(div);
+  }
+});
