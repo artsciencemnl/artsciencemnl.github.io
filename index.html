@@ -36,7 +36,7 @@
     .actions{ display:flex; align-items:center; justify-content:flex-end; gap:22px }
     .icon-btn{ background:none; border:0; color:#fff; cursor:pointer; font-size:22px; line-height:1 }
 
-    /* ========= RIGHT DRAWER (mobile / small) ========= */
+    /* ========= RIGHT DRAWER ========= */
     .drawer{
       position:fixed; inset:0 0 0 auto; width:min(86vw,360px);
       background:#fff; transform:translateX(100%); transition:transform .28s ease;
@@ -58,18 +58,6 @@
     .hero::after{
       content:""; position:absolute; inset:0; background:var(--hero-overlay); pointer-events:none;
     }
-    /* thin circle + centered title */
-    .circle{
-      position:absolute; left:50%; top:50%;
-      width:min(76vmin, 1100px); height:min(76vmin, 1100px);
-      transform:translate(-50%, -50%);
-      border-radius:50%; border:1.6px solid rgba(255,255,255,.85); pointer-events:none;
-    }
-    .hero-title{
-      position:absolute; left:50%; top:50%; transform:translate(-50%, -50%);
-      font-family:"Crimson Text", serif; color:#fff; font-size:44px; letter-spacing:.02em;
-      text-shadow:0 2px 18px rgba(0,0,0,.28);
-    }
 
     /* ========= CONTENT ========= */
     .wrap{ max-width:var(--max); margin:0 auto; padding:48px 22px }
@@ -81,16 +69,13 @@
     .links a{ color:inherit; text-decoration:none; border-bottom:1px solid #111 }
     .links a:hover{ opacity:.7 }
 
-    /* bottom photo strip like reference */
     .gallery{ display:grid; gap:12px; grid-template-columns:1fr; margin:24px 0 8px }
     .gallery img{ width:100%; height:auto; display:block }
     @media (min-width:740px){ .gallery{ grid-template-columns:1fr 1fr 1fr } }
 
-    /* collapse center nav to hamburger on smaller screens */
     @media (max-width:980px){
       .menu{ display:none }
       .brand{ font-size:20px }
-      .hero-title{ font-size:34px }
     }
   </style>
 </head>
@@ -130,12 +115,9 @@
     </div>
   </div>
 
-  <!-- HERO -->
+  <!-- HERO (no circle, no centered word) -->
   <header class="hero" aria-label="Hero">
-    <!-- Put your wide photo at /assets/hero.jpg -->
     <img src="assets/hero.jpg" alt="Wheeled educational robot on a desk at Art Science MNL">
-    <div class="circle" aria-hidden="true"></div>
-    <div class="hero-title">Programs</div>
   </header>
 
   <!-- CONTENT -->
@@ -154,7 +136,6 @@
     </section>
 
     <section id="photos" class="gallery" aria-label="Photos">
-      <!-- Optional images below -->
       <img src="assets/gallery-1.jpg" alt="Students collaborating on a robotics build" loading="lazy" onerror="this.style.display='none'">
       <img src="assets/gallery-2.jpg" alt="Child wiring a wheeled robot" loading="lazy" onerror="this.style.display='none'">
       <img src="assets/gallery-3.jpg" alt="Robot prototype on desk" loading="lazy" onerror="this.style.display='none'">
@@ -178,7 +159,7 @@
     openDrawerBtn.addEventListener('click', openDrawer);
     closeDrawerBtn.addEventListener('click', closeDrawer);
 
-    // Close the drawer if user clicks outside it
+    // Close if user clicks outside drawer
     document.addEventListener('click', (e)=>{
       if (!drawer.classList.contains('open')) return;
       const inside = drawer.contains(e.target) || openDrawerBtn.contains(e.target);
