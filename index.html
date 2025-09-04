@@ -11,17 +11,16 @@
     --text:#111; --muted:#888; --link:#fff;
     --nav-h:64px; --nav-h-desktop:76px;
     --max:1200px;
-    --ring-color: rgba(255,255,255,.94);
 
-    /* how much the photo bleeds left/right beyond the viewport */
+    --ring-color: rgba(255,255,255,.94);           /* progress stroke */
+    --ring-track: rgba(255,255,255,.34);           /* faint track */
+
+    /* how much the hero photo bleeds beyond viewport edges */
     --bleed-left: 4vw;   /* mobile */
     --bleed-right: 4vw;
   }
   @media (min-width:980px){
-    :root{
-      --bleed-left: 2.5vw;  /* desktop: subtler bleed */
-      --bleed-right: 2.5vw;
-    }
+    :root{ --bleed-left: 2.5vw; --bleed-right: 2.5vw; }
   }
 
   *{box-sizing:border-box}
@@ -44,6 +43,7 @@
     font-family:"Crimson Text", serif; font-weight:600;
     letter-spacing:.12em; text-transform:uppercase; color:#fff;
     font-size:clamp(18px, 2.4vw, 24px);
+    text-shadow:0 1px 10px rgba(0,0,0,.22);
   }
   .menu{ display:none; }
   @media (min-width:980px){
@@ -52,7 +52,7 @@
       display:flex; align-items:center; justify-content:center; gap:22px;
       font-family:"Crimson Text", serif; font-size:20px;
     }
-    .menu a, .menu .sep{ color:#fff; text-decoration:none; opacity:.95 }
+    .menu a, .menu .sep{ color:#fff; text-decoration:none; opacity:.95; text-shadow:0 1px 10px rgba(0,0,0,.22) }
     .menu a:hover{ opacity:.7 }
     .menu .sep{ opacity:.55; padding:0 6px }
   }
@@ -62,8 +62,7 @@
     width:44px; height:44px; display:flex; align-items:center; justify-content:center;
     -webkit-tap-highlight-color:transparent;
   }
-
-  /* minimalist icons (stroke only) */
+  /* minimalist stroke-only icons */
   .icon{display:block}
   .icon path, .icon circle, .icon line{stroke:#fff; stroke-width:2; fill:none; stroke-linecap:round; stroke-linejoin:round}
 
@@ -96,16 +95,14 @@
     min-height:58vh;
     overflow:hidden;
   }
-  /* Phone: fill the full device height */
+  /* Phone: full device height */
   @media (max-width:979.98px){
     .hero .media{ aspect-ratio:auto; height:100svh; min-height:100svh; }
   }
 
   .slides{ position:absolute; inset:0; z-index:1 }
-  .slide{
-    position:absolute; inset:0; opacity:0; transition:opacity 900ms ease;
-  }
-  /* BLEED the image beyond the viewport, but keep it centered */
+  .slide{ position:absolute; inset:0; opacity:0; transition:opacity 900ms ease; }
+  /* BLEED the image beyond the viewport, centered */
   .slide img{
     width: calc(100% + var(--bleed-left) + var(--bleed-right));
     height: 100%;
@@ -114,7 +111,7 @@
   }
   .slide.active{ opacity:1 }
 
-  /* ============ SINGLE THIN CIRCLE + LABEL (center) ============ */
+  /* ============ SINGLE THIN CIRCLE + TRACK + LABEL ============ */
   .circle-ui{
     position:absolute; left:50%; top:50%;
     width:min(72vmin, 980px); height:min(72vmin, 980px);
@@ -126,9 +123,9 @@
     font-size:clamp(22px, 3.2vw, 36px); letter-spacing:.02em; text-align:center;
     text-shadow:0 2px 14px rgba(0,0,0,.25);
   }
-  svg.progress-ring{ width:100%; height:100%; transform:rotate(-90deg) } /* start 12 o’clock */
-  /* single thin ticking stroke (no track) */
-  #ring{ stroke:var(--ring-color); stroke-width:.9; stroke-linecap:round; fill:none }
+  svg.progress-ring{ width:100%; height:100%; transform:rotate(-90deg) } /* start at 12 o’clock */
+  #ringTrack { stroke: var(--ring-track); stroke-width: .9; fill: none; }
+  #ring      { stroke: var(--ring-color);  stroke-width: .9; stroke-linecap: round; fill: none; }
 
   /* ================= CONTENT ================= */
   .wrap{ max-width:var(--max); margin:0 auto; padding:40px 18px }
@@ -179,30 +176,29 @@
       <a href="#about">About</a>
       <a href="#programs">Programs</a>
       <a href="#contact">Information</a>
-      <span class="sep">|</span>
       <a href="https://facebook.com/ArtScienceMNL" target="_blank" rel="noopener">Facebook</a>
     </nav>
 
     <div class="actions">
-      <!-- minimalist SEARCH icon -->
+      <!-- Minimalist SEARCH icon -->
       <button class="icon-btn" aria-label="Search" title="Search">
         <svg class="icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="11" cy="11" r="7"></circle>
           <line x1="20" y1="20" x2="16.5" y2="16.5"></line>
         </svg>
       </button>
-      <!-- minimalist BURGER icon -->
+      <!-- Minimalist BURGER icon -->
       <button class="icon-btn" id="openDrawer" aria-label="Menu" title="Menu">
         <svg class="icon" width="24" height="16" viewBox="0 0 24 16" aria-hidden="true">
-          <line x1="2" y1="2" x2="22" y2="2"></line>
-          <line x1="2" y1="8" x2="22" y2="8"></line>
+          <line x1="2" y1="2"  x2="22" y2="2"></line>
+          <line x1="2" y1="8"  x2="22" y2="8"></line>
           <line x1="2" y1="14" x2="22" y2="14"></line>
         </svg>
       </button>
     </div>
   </div>
 
-  <!-- HERO with slideshow + single thin circle -->
+  <!-- HERO with slideshow + single thin circle + track -->
   <header class="hero" aria-label="Hero">
     <div class="media">
       <div class="slides" id="slides">
@@ -214,7 +210,8 @@
 
       <div class="circle-ui" aria-hidden="true">
         <svg class="progress-ring" viewBox="0 0 120 120" role="img" aria-label="Progress ring">
-          <circle id="ring" cx="60" cy="60" r="56" stroke-dasharray="0 352" stroke-dashoffset="0"></circle>
+          <circle id="ringTrack" cx="60" cy="60" r="56"></circle> <!-- static track -->
+          <circle id="ring"      cx="60" cy="60" r="56" stroke-dasharray="0 352" stroke-dashoffset="0"></circle> <!-- ticking progress -->
         </svg>
         <div class="circle-text" id="circleText">Home</div>
       </div>
@@ -256,7 +253,7 @@
   function openDrawer(){ drawer.classList.add('open'); document.body.style.overflow='hidden'; }
   function closeDrawer(){ drawer.classList.remove('open'); document.body.style.overflow=''; }
   openDrawerBtn.addEventListener('click', openDrawer);
-  closeDrawerBtn.addEventListener('click', closeDrawer);
+  closeDrawerBtn && closeDrawerBtn.addEventListener('click', closeDrawer);
   document.addEventListener('click', (e)=>{
     if (!drawer.classList.contains('open')) return;
     const inside = drawer.contains(e.target) || openDrawerBtn.contains(e.target);
@@ -264,7 +261,7 @@
   });
   document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeDrawer(); });
 
-  // ===== Slideshow + thin ticking circle =====
+  // ===== Slideshow + ticking circle =====
   const slides = Array.from(document.querySelectorAll('.slide'));
   const circleText = document.getElementById('circleText');
   const ring = document.getElementById('ring');
