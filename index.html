@@ -2,86 +2,123 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Art Science MNL</title>
   <meta name="description" content="Art Science MNL — Robotics & Creative Science for Kids in Manila." />
+  <!-- Serif for nav/titles, clean sans for body -->
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root{
       --text:#111; --muted:#888; --link:#fff;
-      --nav-h:72px; --max:1200px;
-      --hero-overlay: rgba(0,0,0,.18);
+      --nav-h:60px;            /* phone header height */
+      --nav-h-desktop:72px;    /* desktop header height */
+      --max:1200px;
+      --overlay: rgba(0,0,0,.20);  /* tweak .18–.24 for contrast */
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
-    body{font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:var(--text); background:#fff}
+    body{
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:var(--text); background:#fff; line-height:1.75;
+    }
 
-    /* ========= NAV (overlay) ========= */
+    /* ================= NAV (overlay on hero) ================= */
     .nav{
       position:absolute; inset:0 0 auto 0; height:var(--nav-h);
-      display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;
-      padding:0 24px; z-index:5;
+      display:grid; grid-template-columns:44px 1fr 44px; align-items:center;
+      padding: env(safe-area-inset-top) 16px 0 16px;
+      z-index:5;
     }
     .brand{
-      font-family:"Crimson Text", serif;
-      font-weight:600; letter-spacing:.12em; text-transform:uppercase;
-      color:#fff; font-size:24px;
+      grid-column:2/3; justify-self:center;
+      font-family:"Crimson Text", serif; font-weight:600;
+      letter-spacing:.12em; text-transform:uppercase; color:#fff;
+      font-size:clamp(18px, 2.6vw, 24px);
     }
-    .menu{
-      display:flex; gap:34px; align-items:center; justify-content:center;
-      font-family:"Crimson Text", serif; font-size:20px; color:#fff;
+    .actions{ grid-column:3/4; justify-self:end; display:flex; gap:18px; align-items:center }
+    .icon-btn{
+      background:none; border:0; color:#fff; cursor:pointer;
+      font-size:22px; line-height:1; width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+      -webkit-tap-highlight-color:transparent;
     }
-    .menu a{ color:#fff; text-decoration:none; opacity:.95 }
-    .menu a:hover{ opacity:.7 }
-    .actions{ display:flex; align-items:center; justify-content:flex-end; gap:22px }
-    .icon-btn{ background:none; border:0; color:#fff; cursor:pointer; font-size:22px; line-height:1 }
 
-    /* ========= RIGHT DRAWER ========= */
+    /* Desktop center menu (hidden on phone like the reference) */
+    .menu{ display:none; }
+    @media (min-width:980px){
+      .nav{ height:var(--nav-h-desktop); grid-template-columns: 1fr auto 1fr; padding:0 24px }
+      .brand{ grid-column:1/2; justify-self:start }
+      .menu{
+        display:flex; gap:34px; align-items:center; justify-content:center;
+        font-family:"Crimson Text", serif; font-size:20px;
+      }
+      .menu a{ color:#fff; text-decoration:none; opacity:.95 }
+      .menu a:hover{ opacity:.7 }
+      .actions{ grid-column:3/4 }
+    }
+
+    /* ================= RIGHT DRAWER (phone/tablet) ================= */
     .drawer{
       position:fixed; inset:0 0 0 auto; width:min(86vw,360px);
       background:#fff; transform:translateX(100%); transition:transform .28s ease;
       z-index:30; border-left:1px solid #eee; display:flex; flex-direction:column;
+      box-shadow: 0 0 0 100vmax rgba(0,0,0,0); /* click-off area simulated by doc listener */
     }
     .drawer.open{ transform:none }
-    .drawer header{ padding:18px 18px 4px; font-family:"Crimson Text",serif; letter-spacing:.12em; text-transform:uppercase }
-    .drawer .close{ align-self:flex-end; margin:8px 10px 0 0; background:none; border:0; font-size:22px; cursor:pointer }
-    .drawer nav{ display:flex; flex-direction:column; gap:14px; padding:8px 18px 18px }
-    .drawer a{ color:#111; text-decoration:none; border-bottom:1px solid #111; width:fit-content }
+    .drawer header{
+      padding:18px 18px 4px; font-family:"Crimson Text",serif;
+      letter-spacing:.12em; text-transform:uppercase;
+    }
+    .drawer .close{
+      align-self:flex-end; margin:8px 10px 0 0; background:none; border:0; font-size:24px; cursor:pointer;
+      width:44px; height:44px;
+    }
+    .drawer nav{ display:flex; flex-direction:column; gap:16px; padding:8px 18px 18px }
+    .drawer a{
+      color:#111; text-decoration:none; border-bottom:1px solid #111; width:fit-content;
+      font-family:"Crimson Text", serif; font-size:22px;
+    }
 
-    /* ========= HERO ========= */
+    /* ================= HERO (16:9 cover with overlay) ================= */
     .hero{ position:relative }
+    .hero .media{
+      position:relative;
+      aspect-ratio: 16 / 9;      /* consistent height */
+      min-height:58vh;           /* tall feel on phones */
+    }
+    .hero .media::after{
+      content:""; position:absolute; inset:0; background:var(--overlay); pointer-events:none;
+    }
     .hero img{
-      width:100%; height:auto; display:block; object-fit:cover; min-height:56vh;
+      width:100%; height:100%;
+      object-fit:cover; display:block;
       filter:saturate(.98) contrast(1.02);
     }
-    /* subtle dark overlay for readability */
-    .hero::after{
-      content:""; position:absolute; inset:0; background:var(--hero-overlay); pointer-events:none;
-    }
 
-    /* ========= CONTENT ========= */
-    .wrap{ max-width:var(--max); margin:0 auto; padding:48px 22px }
-    .section{ margin:48px 0 }
+    /* ================= CONTENT ================= */
+    .wrap{ max-width:var(--max); margin:0 auto; padding:40px 18px }
+    .section{ margin:42px 0 }
     .section h2{
-      font-family:"Crimson Text",serif; font-weight:600; font-size:22px; margin:0 0 12px;
+      font-family:"Crimson Text",serif; font-weight:600; font-size:clamp(18px, 2.2vw, 22px); margin:0 0 12px;
     }
-    .section p{ margin:0 0 16px; line-height:1.8 }
+    .section p{ margin:0 0 16px; line-height:1.85 }
     .links a{ color:inherit; text-decoration:none; border-bottom:1px solid #111 }
     .links a:hover{ opacity:.7 }
 
+    /* Bottom gallery (single column on phone, 3 on desktop) */
     .gallery{ display:grid; gap:12px; grid-template-columns:1fr; margin:24px 0 8px }
     .gallery img{ width:100%; height:auto; display:block }
     @media (min-width:740px){ .gallery{ grid-template-columns:1fr 1fr 1fr } }
 
-    @media (max-width:980px){
-      .menu{ display:none }
-      .brand{ font-size:20px }
+    /* Improve spacing/fonts on large screens */
+    @media (min-width:1200px){
+      .wrap{ padding:56px 24px }
+      .section{ margin:56px 0 }
     }
   </style>
 </head>
 <body>
 
-  <!-- Right-side drawer -->
+  <!-- Right-side drawer (mobile nav) -->
   <aside class="drawer" id="drawer" aria-hidden="true">
     <button class="close" id="closeDrawer" aria-label="Close">✕</button>
     <header>Art Science MNL</header>
@@ -94,7 +131,7 @@
     </nav>
   </aside>
 
-  <!-- Top overlay nav -->
+  <!-- Overlay nav (white text over hero like the reference) -->
   <div class="nav" id="top">
     <div class="brand">ART SCIENCE MNL</div>
 
@@ -106,6 +143,7 @@
     </nav>
 
     <div class="actions">
+      <!-- search icon placeholder to match ref feel -->
       <button class="icon-btn" aria-label="Search" title="Search">🔍</button>
       <button class="icon-btn" id="openDrawer" aria-label="Menu" title="Menu">
         <svg width="24" height="16" viewBox="0 0 22 14" aria-hidden="true">
@@ -115,9 +153,12 @@
     </div>
   </div>
 
-  <!-- HERO (no circle, no centered word) -->
+  <!-- HERO (full-bleed photo, 16:9 cover crop) -->
   <header class="hero" aria-label="Hero">
-    <img src="assets/hero.jpg" alt="Wheeled educational robot on a desk at Art Science MNL">
+    <div class="media">
+      <!-- Put your wide photo at /assets/hero.jpg -->
+      <img src="assets/hero.jpg" alt="Wheeled educational robot on a desk at Art Science MNL">
+    </div>
   </header>
 
   <!-- CONTENT -->
@@ -136,6 +177,7 @@
     </section>
 
     <section id="photos" class="gallery" aria-label="Photos">
+      <!-- Optional photos; remove if not used -->
       <img src="assets/gallery-1.jpg" alt="Students collaborating on a robotics build" loading="lazy" onerror="this.style.display='none'">
       <img src="assets/gallery-2.jpg" alt="Child wiring a wheeled robot" loading="lazy" onerror="this.style.display='none'">
       <img src="assets/gallery-3.jpg" alt="Robot prototype on desk" loading="lazy" onerror="this.style.display='none'">
@@ -148,7 +190,7 @@
   </main>
 
   <script>
-    // Right drawer controls
+    // Right drawer controls (mobile)
     const drawer = document.getElementById('drawer');
     const openDrawerBtn = document.getElementById('openDrawer');
     const closeDrawerBtn = document.getElementById('closeDrawer');
@@ -159,14 +201,14 @@
     openDrawerBtn.addEventListener('click', openDrawer);
     closeDrawerBtn.addEventListener('click', closeDrawer);
 
-    // Close if user clicks outside drawer
+    // Close if user clicks outside the drawer
     document.addEventListener('click', (e)=>{
       if (!drawer.classList.contains('open')) return;
       const inside = drawer.contains(e.target) || openDrawerBtn.contains(e.target);
       if (!inside) closeDrawer();
     });
 
-    // Close on Escape
+    // Close on Escape for accessibility
     document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeDrawer(); });
   </script>
 </body>
