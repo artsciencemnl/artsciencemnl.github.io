@@ -11,11 +11,26 @@
     --text:#111; --muted:#888; --link:#fff;
     --nav-h:64px; --nav-h-desktop:76px;
     --max:1200px;
-    --ring-color: rgba(255,255,255,.95);
+    --ring-color: rgba(255,255,255,.94);
+
+    /* how much the photo bleeds left/right beyond the viewport */
+    --bleed-left: 4vw;   /* mobile */
+    --bleed-right: 4vw;
   }
+  @media (min-width:980px){
+    :root{
+      --bleed-left: 2.5vw;  /* desktop: subtler bleed */
+      --bleed-right: 2.5vw;
+    }
+  }
+
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:var(--text); background:#fff; line-height:1.75;}
+  body{
+    font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    color:var(--text); background:#fff; line-height:1.75;
+    overflow-x:hidden; /* hide horizontal scroll from the bleed */
+  }
 
   /* ================= NAV (overlay on hero) ================= */
   .nav{
@@ -44,9 +59,13 @@
   .actions{ justify-self:end; display:flex; gap:18px; align-items:center }
   .icon-btn{
     background:none; border:0; color:#fff; cursor:pointer;
-    font-size:22px; line-height:1; width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+    width:44px; height:44px; display:flex; align-items:center; justify-content:center;
     -webkit-tap-highlight-color:transparent;
   }
+
+  /* minimalist icons (stroke only) */
+  .icon{display:block}
+  .icon path, .icon circle, .icon line{stroke:#fff; stroke-width:2; fill:none; stroke-linecap:round; stroke-linejoin:round}
 
   /* ================= RIGHT DRAWER (mobile) ================= */
   .drawer{
@@ -77,16 +96,22 @@
     min-height:58vh;
     overflow:hidden;
   }
+  /* Phone: fill the full device height */
   @media (max-width:979.98px){
     .hero .media{ aspect-ratio:auto; height:100svh; min-height:100svh; }
   }
+
   .slides{ position:absolute; inset:0; z-index:1 }
   .slide{
-    position:absolute; inset:0; opacity:0;
-    transition:opacity 900ms ease;           /* fade only */
-    background:transparent;                  /* no gray outline */
+    position:absolute; inset:0; opacity:0; transition:opacity 900ms ease;
   }
-  .slide img{ width:100%; height:100%; object-fit:cover; display:block }
+  /* BLEED the image beyond the viewport, but keep it centered */
+  .slide img{
+    width: calc(100% + var(--bleed-left) + var(--bleed-right));
+    height: 100%;
+    object-fit: cover; display:block;
+    margin-left: calc(-1 * var(--bleed-left));
+  }
   .slide.active{ opacity:1 }
 
   /* ============ SINGLE THIN CIRCLE + LABEL (center) ============ */
@@ -102,6 +127,8 @@
     text-shadow:0 2px 14px rgba(0,0,0,.25);
   }
   svg.progress-ring{ width:100%; height:100%; transform:rotate(-90deg) } /* start 12 o’clock */
+  /* single thin ticking stroke (no track) */
+  #ring{ stroke:var(--ring-color); stroke-width:.9; stroke-linecap:round; fill:none }
 
   /* ================= CONTENT ================= */
   .wrap{ max-width:var(--max); margin:0 auto; padding:40px 18px }
@@ -157,10 +184,19 @@
     </nav>
 
     <div class="actions">
-      <button class="icon-btn" aria-label="Search" title="Search">🔍</button>
+      <!-- minimalist SEARCH icon -->
+      <button class="icon-btn" aria-label="Search" title="Search">
+        <svg class="icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="20" y1="20" x2="16.5" y2="16.5"></line>
+        </svg>
+      </button>
+      <!-- minimalist BURGER icon -->
       <button class="icon-btn" id="openDrawer" aria-label="Menu" title="Menu">
-        <svg width="24" height="16" viewBox="0 0 22 14" aria-hidden="true">
-          <path d="M1 1h20M1 7h20M1 13h20" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <svg class="icon" width="24" height="16" viewBox="0 0 24 16" aria-hidden="true">
+          <line x1="2" y1="2" x2="22" y2="2"></line>
+          <line x1="2" y1="8" x2="22" y2="8"></line>
+          <line x1="2" y1="14" x2="22" y2="14"></line>
         </svg>
       </button>
     </div>
@@ -178,9 +214,7 @@
 
       <div class="circle-ui" aria-hidden="true">
         <svg class="progress-ring" viewBox="0 0 120 120" role="img" aria-label="Progress ring">
-          <!-- single thin ticking stroke (no gray track) -->
-          <circle id="ring" cx="60" cy="60" r="56" fill="none" stroke="var(--ring-color)"
-                  stroke-linecap="round" stroke-width="0.5" stroke-dasharray="0 352" stroke-dashoffset="0"></circle>
+          <circle id="ring" cx="60" cy="60" r="56" stroke-dasharray="0 352" stroke-dashoffset="0"></circle>
         </svg>
         <div class="circle-text" id="circleText">Home</div>
       </div>
@@ -251,7 +285,6 @@
 
   function resetRing(){
     ring.style.strokeDasharray = `0 ${C}`;
-    ring.style.strokeWidth = 1; // keep line thin throughout
   }
 
   function tick(){
