@@ -41,7 +41,8 @@
   }
   .brand{
     font-family:"Crimson Text", serif; font-weight:600;
-    letter-spacing:.12em; text-transform:uppercase; color:#fff;
+    letter-spacing:.12em; /* keep the refined look */
+    color:#fff;
     font-size:clamp(18px, 2.4vw, 24px);
     text-shadow:0 1px 10px rgba(0,0,0,.22);
   }
@@ -82,7 +83,7 @@
   .drawer.open{ transform:none }
   .drawer header{
     padding:18px 18px 4px; font-family:"Crimson Text",serif;
-    letter-spacing:.12em; text-transform:uppercase;
+    letter-spacing:.12em; /* no uppercase – keep exact case */
   }
   .drawer .close{
     align-self:flex-end; margin:8px 10px 0 0; background:none; border:0; font-size:24px; cursor:pointer;
