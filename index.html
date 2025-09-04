@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Art Science MNL</title>
   <meta name="description" content="Art Science MNL — Robotics & Creative Science for Kids in Manila." />
+  <!-- Serif for nav/titles, clean sans for body -->
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -12,23 +13,20 @@
       --nav-h:60px;            /* phone header height */
       --nav-h-desktop:72px;    /* desktop header height */
       --max:1200px;
-      --overlay-top: rgba(0,0,0,.28); /* stronger at top for readability on phones */
-      --overlay-btm: rgba(0,0,0,.16); /* lighter at bottom */
-      --bar-bg:#fff;
-      --bar-fg:#111;
+      --overlay: rgba(0,0,0,.20);  /* tweak .18–.24 for contrast */
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     body{
       font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      color:var(--text); background:#fff; line-height:1.78;
+      color:var(--text); background:#fff; line-height:1.75;
     }
 
-    /* ============ OVERLAY NAV (on hero) ============ */
+    /* ================= NAV (overlay on hero) ================= */
     .nav{
       position:absolute; inset:0 0 auto 0; height:var(--nav-h);
       display:grid; grid-template-columns:44px 1fr 44px; align-items:center;
-      padding: max(env(safe-area-inset-top), 10px) 16px 0 16px;
+      padding: env(safe-area-inset-top) 16px 0 16px;
       z-index:5;
     }
     .brand{
@@ -58,28 +56,12 @@
       .actions{ grid-column:3/4 }
     }
 
-    /* ============ STICKY TOPBAR (appears after scroll for phones) ============ */
-    .topbar{
-      position:sticky; top:0; z-index:6;
-      transform:translateY(-100%); transition:transform .25s ease;
-      background:var(--bar-bg); color:var(--bar-fg); border-bottom:1px solid #eee;
-    }
-    .topbar.show{ transform:translateY(0) }
-    .topbar-inner{
-      height:54px; display:grid; grid-template-columns:44px 1fr 44px; align-items:center; padding:0 10px;
-    }
-    .topbar .brand-sm{
-      grid-column:2/3; justify-self:center;
-      font-family:"Crimson Text", serif; letter-spacing:.12em; text-transform:uppercase; font-size:18px;
-    }
-    .topbar .icon-btn{ color:var(--bar-fg) }
-
-    /* ============ RIGHT DRAWER (phone/tablet) ============ */
+    /* ================= RIGHT DRAWER (phone/tablet) ================= */
     .drawer{
       position:fixed; inset:0 0 0 auto; width:min(86vw,360px);
       background:#fff; transform:translateX(100%); transition:transform .28s ease;
       z-index:30; border-left:1px solid #eee; display:flex; flex-direction:column;
-      box-shadow: 0 0 0 100vmax rgba(0,0,0,0);
+      box-shadow: 0 0 0 100vmax rgba(0,0,0,0); /* click-off area simulated by doc listener */
     }
     .drawer.open{ transform:none }
     .drawer header{
@@ -96,39 +78,47 @@
       font-family:"Crimson Text", serif; font-size:22px;
     }
 
-    /* ============ HERO (16:9 cover with stronger top gradient) ============ */
+    /* ================= HERO (desktop 16:9; phone full device height) ================= */
     .hero{ position:relative }
     .hero .media{
       position:relative;
-      aspect-ratio: 16 / 9;
-      min-height:62vh;           /* a bit taller for phones */
+      aspect-ratio: 16 / 9;      /* desktop default */
+      min-height:58vh;           /* graceful height on mid screens */
     }
     .hero .media::after{
-      /* stronger at top, lighter at bottom for readability of white nav */
-      content:""; position:absolute; inset:0;
-      background: linear-gradient(to bottom, var(--overlay-top), var(--overlay-btm));
-      pointer-events:none;
+      content:""; position:absolute; inset:0; background:var(--overlay); pointer-events:none;
     }
     .hero img{
       width:100%; height:100%;
       object-fit:cover; display:block;
       filter:saturate(.98) contrast(1.02);
     }
+    /* Phone: fill the whole screen height so everything lines up */
+    @media (max-width:980px){
+      .hero .media{
+        aspect-ratio:auto;
+        height:100vh;        /* fallback */
+        height:100svh;       /* modern mobile (ignores URL bar jumps) */
+        min-height:100svh;
+      }
+    }
 
-    /* ============ CONTENT ============ */
-    .wrap{ max-width:var(--max); margin:0 auto; padding:36px 16px }
-    .section{ margin:38px 0 }
+    /* ================= CONTENT ================= */
+    .wrap{ max-width:var(--max); margin:0 auto; padding:40px 18px }
+    .section{ margin:42px 0 }
     .section h2{
       font-family:"Crimson Text",serif; font-weight:600; font-size:clamp(18px, 2.2vw, 22px); margin:0 0 12px;
     }
-    .section p{ margin:0 0 16px; line-height:1.9 }
+    .section p{ margin:0 0 16px; line-height:1.85 }
     .links a{ color:inherit; text-decoration:none; border-bottom:1px solid #111 }
     .links a:hover{ opacity:.7 }
 
+    /* Bottom gallery */
     .gallery{ display:grid; gap:12px; grid-template-columns:1fr; margin:24px 0 8px }
     .gallery img{ width:100%; height:auto; display:block }
     @media (min-width:740px){ .gallery{ grid-template-columns:1fr 1fr 1fr } }
 
+    /* Large screens: a bit more air */
     @media (min-width:1200px){
       .wrap{ padding:56px 24px }
       .section{ margin:56px 0 }
@@ -137,16 +127,7 @@
 </head>
 <body>
 
-  <!-- Sticky topbar (appears once you scroll on phones) -->
-  <div class="topbar" id="topbar" aria-hidden="true">
-    <div class="topbar-inner">
-      <span></span>
-      <div class="brand-sm">ART SCIENCE MNL</div>
-      <button class="icon-btn" id="openDrawerTop" aria-label="Menu" title="Menu">☰</button>
-    </div>
-  </div>
-
-  <!-- Right-side drawer -->
+  <!-- Right-side drawer (mobile nav) -->
   <aside class="drawer" id="drawer" aria-hidden="true">
     <button class="close" id="closeDrawer" aria-label="Close">✕</button>
     <header>Art Science MNL</header>
@@ -159,11 +140,13 @@
     </nav>
   </aside>
 
-  <!-- Overlay nav on hero -->
+  <!-- Overlay nav (white text over hero like the reference) -->
   <div class="nav" id="top">
-    <button class="icon-btn" aria-label="Search" title="Search">🔍</button>
+    <div></div>
     <div class="brand">ART SCIENCE MNL</div>
     <div class="actions">
+      <!-- search icon placeholder to match ref feel -->
+      <button class="icon-btn" aria-label="Search" title="Search">🔍</button>
       <button class="icon-btn" id="openDrawer" aria-label="Menu" title="Menu">
         <svg width="24" height="16" viewBox="0 0 22 14" aria-hidden="true">
           <path d="M1 1h20M1 7h20M1 13h20" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
@@ -172,9 +155,10 @@
     </div>
   </div>
 
-  <!-- HERO -->
+  <!-- HERO (full-bleed photo) -->
   <header class="hero" aria-label="Hero">
     <div class="media">
+      <!-- Put your wide photo at /assets/hero.jpg -->
       <img src="assets/hero.jpg" alt="Wheeled educational robot on a desk at Art Science MNL">
     </div>
   </header>
@@ -195,6 +179,7 @@
     </section>
 
     <section id="photos" class="gallery" aria-label="Photos">
+      <!-- Optional photos; remove if not used -->
       <img src="assets/gallery-1.jpg" alt="Students collaborating on a robotics build" loading="lazy" onerror="this.style.display='none'">
       <img src="assets/gallery-2.jpg" alt="Child wiring a wheeled robot" loading="lazy" onerror="this.style.display='none'">
       <img src="assets/gallery-3.jpg" alt="Robot prototype on desk" loading="lazy" onerror="this.style.display='none'">
@@ -207,37 +192,26 @@
   </main>
 
   <script>
-    // Drawer controls
+    // Right drawer controls (mobile)
     const drawer = document.getElementById('drawer');
     const openDrawerBtn = document.getElementById('openDrawer');
-    const openDrawerTopBtn = document.getElementById('openDrawerTop');
     const closeDrawerBtn = document.getElementById('closeDrawer');
 
     function openDrawer(){ drawer.classList.add('open'); document.body.style.overflow='hidden'; }
     function closeDrawer(){ drawer.classList.remove('open'); document.body.style.overflow=''; }
 
     openDrawerBtn.addEventListener('click', openDrawer);
-    openDrawerTopBtn.addEventListener('click', openDrawer);
     closeDrawerBtn.addEventListener('click', closeDrawer);
 
     // Close if user clicks outside the drawer
     document.addEventListener('click', (e)=>{
       if (!drawer.classList.contains('open')) return;
-      const inside = drawer.contains(e.target) || openDrawerBtn.contains(e.target) || (openDrawerTopBtn && openDrawerTopBtn.contains(e.target));
+      const inside = drawer.contains(e.target) || openDrawerBtn.contains(e.target);
       if (!inside) closeDrawer();
     });
 
-    // Close on Escape
+    // Close on Escape for accessibility
     document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeDrawer(); });
-
-    // Show compact topbar after scrolling past hero (better on CP/phones)
-    const topbar = document.getElementById('topbar');
-    const hero = document.querySelector('.hero');
-    const observer = new IntersectionObserver(([entry])=>{
-      // when hero leaves the top, show the topbar
-      topbar.classList.toggle('show', !entry.isIntersecting);
-    }, { rootMargin: "-60px 0px 0px 0px", threshold: 0 });
-    observer.observe(hero);
   </script>
 </body>
 </html>
