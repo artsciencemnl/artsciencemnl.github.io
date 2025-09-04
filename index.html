@@ -11,17 +11,11 @@
     --text:#111; --muted:#888; --link:#fff;
     --nav-h:64px; --nav-h-desktop:76px;
     --max:1200px;
-    --overlay-top: rgba(0,0,0,.24);
-    --overlay-btm: rgba(0,0,0,.14);
-    --ring-color: rgba(255,255,255,.9);
-    --ring-track: rgba(255,255,255,.35);
+    --ring-color: rgba(255,255,255,.95);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{
-    font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    color:var(--text); background:#fff; line-height:1.75;
-  }
+  body{font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:var(--text); background:#fff; line-height:1.75;}
 
   /* ================= NAV (overlay on hero) ================= */
   .nav{
@@ -36,9 +30,7 @@
     letter-spacing:.12em; text-transform:uppercase; color:#fff;
     font-size:clamp(18px, 2.4vw, 24px);
   }
-  .menu{
-    display:none;
-  }
+  .menu{ display:none; }
   @media (min-width:980px){
     .nav{ height:var(--nav-h-desktop); padding:0 28px }
     .menu{
@@ -85,24 +77,19 @@
     min-height:58vh;
     overflow:hidden;
   }
-  /* Phone: fill the full device height */
   @media (max-width:979.98px){
     .hero .media{ aspect-ratio:auto; height:100svh; min-height:100svh; }
   }
-  .hero .media::after{
-    content:""; position:absolute; inset:0;
-    background: linear-gradient(to bottom, var(--overlay-top), var(--overlay-btm));
-    pointer-events:none; z-index:2;
-  }
   .slides{ position:absolute; inset:0; z-index:1 }
   .slide{
-    position:absolute; inset:0; opacity:0; transition:opacity 900ms ease, transform 7000ms ease;
-    transform:scale(1.02); background:#f0f0f0;
+    position:absolute; inset:0; opacity:0;
+    transition:opacity 900ms ease;           /* fade only */
+    background:transparent;                  /* no gray outline */
   }
   .slide img{ width:100%; height:100%; object-fit:cover; display:block }
-  .slide.active{ opacity:1; transform:scale(1) }
+  .slide.active{ opacity:1 }
 
-  /* ============ SINGLE CIRCLE + LABEL (center) ============ */
+  /* ============ SINGLE THIN CIRCLE + LABEL (center) ============ */
   .circle-ui{
     position:absolute; left:50%; top:50%;
     width:min(72vmin, 980px); height:min(72vmin, 980px);
@@ -136,7 +123,7 @@
   }
 
   @media (prefers-reduced-motion: reduce){
-    .slide{ transition:none; transform:none }
+    .slide{ transition:none }
   }
 </style>
 </head>
@@ -179,24 +166,21 @@
     </div>
   </div>
 
-  <!-- HERO with slideshow + single ticking circle -->
+  <!-- HERO with slideshow + single thin circle -->
   <header class="hero" aria-label="Hero">
     <div class="media">
       <div class="slides" id="slides">
-        <!-- Each slide label appears inside the circle -->
+        <!-- Labels appear inside the circle -->
         <figure class="slide active" data-label="Home"><img src="assets/hero-1.jpg" alt="Art Science MNL hero image 1"></figure>
         <figure class="slide" data-label="About"><img src="assets/hero-2.jpg" alt="Art Science MNL hero image 2"></figure>
         <figure class="slide" data-label="Programs"><img src="assets/hero-3.jpg" alt="Art Science MNL hero image 3"></figure>
       </div>
 
-      <!-- One thin circle + centered label -->
       <div class="circle-ui" aria-hidden="true">
         <svg class="progress-ring" viewBox="0 0 120 120" role="img" aria-label="Progress ring">
-          <!-- track -->
-          <circle cx="60" cy="60" r="56" fill="none" stroke="var(--ring-track)" stroke-width="1.2"></circle>
-          <!-- ticking progress -->
+          <!-- single thin ticking stroke (no gray track) -->
           <circle id="ring" cx="60" cy="60" r="56" fill="none" stroke="var(--ring-color)"
-                  stroke-linecap="round" stroke-width="1.6" stroke-dasharray="0 352" stroke-dashoffset="0"></circle>
+                  stroke-linecap="round" stroke-width="1" stroke-dasharray="0 352" stroke-dashoffset="0"></circle>
         </svg>
         <div class="circle-text" id="circleText">Home</div>
       </div>
@@ -246,15 +230,15 @@
   });
   document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeDrawer(); });
 
-  // ===== Slideshow + ticking circle =====
+  // ===== Slideshow + thin ticking circle =====
   const slides = Array.from(document.querySelectorAll('.slide'));
   const circleText = document.getElementById('circleText');
   const ring = document.getElementById('ring');
 
   const duration = 6500;     // ms per full rotation / slide
-  const stepMs = 110;        // tick granularity (higher = chunkier ticks)
-  const r = 56;              // SVG radius
-  const C = 2 * Math.PI * r; // circumference ≈ 351.86
+  const stepMs = 110;        // tick granularity
+  const r = 56;
+  const C = 2 * Math.PI * r;
   let idx = 0;
   let t0 = null;
   let timer = null;
@@ -267,20 +251,19 @@
 
   function resetRing(){
     ring.style.strokeDasharray = `0 ${C}`;
-    ring.style.strokeWidth = 1.6;
+    ring.style.strokeWidth = 1; // keep line thin throughout
   }
 
   function tick(){
     const now = performance.now();
     if(t0 === null) t0 = now;
     const elapsed = now - t0;
-    const p = Math.min(1, elapsed / duration);   // 0..1
+    const p = Math.min(1, elapsed / duration);
     const steps = Math.floor(duration / stepMs);
     const stepped = Math.floor(p * steps) / steps;
     const dash = stepped * C;
 
     ring.style.strokeDasharray = `${dash} ${C}`;
-    ring.style.strokeWidth = (1.6 + stepped * 1.0).toFixed(2);
 
     if(p >= 1){
       idx = (idx + 1) % slides.length;
@@ -299,9 +282,7 @@
     requestAnimationFrame(tick);
   }
 
-  if(slides.length){
-    start();
-  }
+  if(slides.length){ start(); }
 </script>
 </body>
 </html>
