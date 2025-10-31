@@ -6,12 +6,27 @@
   <title>Art & Science MNL</title>
   <meta name="description" content="Art & Science MNL — Robotics for Kids in Makati City." />
 
-  <!-- Brand & typefaces -->
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&display=swap" rel="stylesheet">
+  <!-- Brand & typefaces (Inter for site, Nunito Sans only for logo/drawer header) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito+Sans:wght@800;900&display=swap" rel="stylesheet">
 
   <!-- Site styles (cache-busted) -->
   <link rel="stylesheet" href="styles.css?v=7">
+
+  <!-- Font scoping: Inter everywhere; Nunito ONLY for .brand and drawer header -->
+  <style>
+    :root{
+      --font-base: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      --font-brand: "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    }
+    html { font-family: var(--font-base) !important; }
+    body { font: 400 16px/1.55 var(--font-base) !important; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    h1,h2,h3,h4,h5,h6,
+    .nav .menu a,
+    p, li, label, button, input, textarea,
+    .circle-text { font-family: var(--font-base) !important; }
+    .brand,
+    .drawer > header { font-family: var(--font-brand) !important; font-weight: 900; letter-spacing: 0.06em; }
+  </style>
 </head>
 <body>
 
@@ -143,8 +158,26 @@
 
       <h3>Venue</h3>
       <ul>
-        <li><strong>The Windsor Square</strong> — Makati City</li>
+        <li>
+          <strong>The Windsor Square</strong> — Makati City
+          &middot;
+          <a href="https://www.google.com/maps?q=The%20Windsor%20Square%2C%20Makati%20City" target="_blank" rel="noopener">
+            View on Google Maps
+          </a>
+        </li>
       </ul>
+
+      <!-- Responsive Google Map embed -->
+      <div style="margin-top:0.75rem; border-radius:12px; overflow:hidden; aspect-ratio:16/9;">
+        <iframe
+          title="Map to The Windsor Square, Makati City"
+          src="https://www.google.com/maps?q=The%20Windsor%20Square%2C%20Makati%20City&z=16&output=embed"
+          style="width:100%; height:100%; border:0;"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen>
+        </iframe>
+      </div>
 
       <h3>Tuition & Inclusions</h3>
       <ul>
