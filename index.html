@@ -1,170 +1,31 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Art & Science MNL</title>
-<meta name="description" content="Art & Science MNL — Robotics & Creative Science for Kids in Manila." />
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --text:#111; --muted:#888; --link:#fff;
-    --nav-h:64px; --nav-h-desktop:76px;
-    --max:1200px;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Art & Science MNL</title>
+  <meta name="description" content="Art & Science MNL — Robotics & Creative Science for Kids in Manila." />
 
-    --ring-color: rgba(255,255,255,.94); /* progress stroke */
-    --ring-track: rgba(255,255,255,.34); /* faint track */
+  <!-- Brand & typefaces -->
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&display=swap" rel="stylesheet">
 
-    /* how much the hero photo bleeds beyond viewport edges */
-    --bleed-left: 4vw;   /* mobile */
-    --bleed-right: 4vw;
-  }
-  @media (min-width:980px){
-    :root{ --bleed-left: 2.5vw; --bleed-right: 2.5vw; }
-  }
+  <!-- Site styles (version query helps bust cache after updates) -->
+  <link rel="stylesheet" href="styles.css?v=5">
 
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    color:var(--text); background:#fff; line-height:1.75;
-    overflow-x:hidden; /* hide horizontal scroll from the bleed */
-  }
-
-  /* ================= NAV (mobile = flex, desktop = grid) ================= */
-  /* Mobile-first nav: brand left, icons right */
-  .nav{
-    position:absolute; inset:0 0 auto 0; height:var(--nav-h);
-    display:flex; align-items:center; justify-content:space-between;
-    padding: env(safe-area-inset-top) 20px 0 20px;
-    z-index:5;
-  }
-  .brand{
-    font-family:"Crimson Text", serif; font-weight:600;
-    letter-spacing:.12em; /* keep the refined look */
-    color:#fff;
-    font-size:clamp(18px, 2.4vw, 24px);
-    text-shadow:0 1px 10px rgba(0,0,0,.22);
-  }
-  .menu{ display:none; }  /* hide center menu on phone */
-  .actions{ display:flex; gap:18px; align-items:center }
-
-  /* Minimalist stroke-only icons */
-  .icon-btn{
-    background:none; border:0; color:#fff; cursor:pointer;
-    width:44px; height:44px; display:flex; align-items:center; justify-content:center;
-    -webkit-tap-highlight-color:transparent;
-  }
-  .icon{display:block}
-  .icon path, .icon circle, .icon line{stroke:#fff; stroke-width:2; fill:none; stroke-linecap:round; stroke-linejoin:round}
-
-  /* Desktop: switch to 3-col grid (brand | center menu | icons) */
-  @media (min-width:980px){
-    .nav{
-      display:grid; grid-template-columns: 1fr auto 1fr;
-      height:var(--nav-h-desktop); padding:0 28px;
-    }
-    .menu{
-      display:flex; align-items:center; justify-content:center; gap:22px;
-      font-family:"Crimson Text", serif; font-size:20px;
-    }
-    .menu a{ color:#fff; text-decoration:none; opacity:.95; text-shadow:0 1px 10px rgba(0,0,0,.22) }
-    .menu a:hover{ opacity:.7 }
-    .brand{ justify-self:start }
-    .actions{ justify-self:end }
-  }
-
-  /* ================= RIGHT DRAWER (mobile) ================= */
-  .drawer{
-    position:fixed; inset:0 0 0 auto; width:min(86vw,360px);
-    background:#fff; transform:translateX(100%); transition:transform .28s ease;
-    z-index:30; border-left:1px solid #eee; display:flex; flex-direction:column;
-  }
-  .drawer.open{ transform:none }
-  .drawer header{
-    padding:18px 18px 4px; font-family:"Crimson Text",serif;
-    letter-spacing:.12em; /* no uppercase – keep exact case */
-  }
-  .drawer .close{
-    align-self:flex-end; margin:8px 10px 0 0; background:none; border:0; font-size:24px; cursor:pointer;
-    width:44px; height:44px;
-  }
-  .drawer nav{ display:flex; flex-direction:column; gap:16px; padding:8px 18px 18px }
-  .drawer a{
-    color:#111; text-decoration:none; border-bottom:1px solid #111; width:fit-content;
-    font-family:"Crimson Text", serif; font-size:22px;
-  }
-
-  /* ================= HERO + SLIDES ================= */
-  .hero{ position:relative }
-  .hero .media{
-    position:relative;
-    aspect-ratio: 16 / 9;  /* desktop */
-    min-height:58vh;
-    overflow: visible;     /* allow image bleed to show */
-  }
-  /* Phone: full device height */
-  @media (max-width:979.98px){
-    .hero .media{ aspect-ratio:auto; height:100svh; min-height:100svh; }
-  }
-
-  .slides{ position:absolute; inset:0; z-index:1 }
-  .slide{ position:absolute; inset:0; opacity:0; transition:opacity 900ms ease; }
-  /* BLEED the image beyond the viewport, centered */
-  .slide img{
-    width: calc(100% + var(--bleed-left) + var(--bleed-right));
-    height: 100%;
-    object-fit: cover; display:block;
-    margin-left: calc(-1 * var(--bleed-left));
-  }
-  .slide.active{ opacity:1 }
-
-  /* ============ SINGLE THIN CIRCLE + TRACK + LABEL ============ */
-  .circle-ui{
-    position:absolute; left:50%; top:50%;
-    width:min(72vmin, 980px); height:min(72vmin, 980px);
-    transform:translate(-50%,-50%);
-    z-index:3; pointer-events:none; display:grid; place-items:center;
-  }
-  .circle-text{
-    position:absolute; color:#fff; font-family:"Crimson Text",serif;
-    font-size:clamp(22px, 3.2vw, 36px); letter-spacing:.02em; text-align:center;
-    text-shadow:0 2px 14px rgba(0,0,0,.25);
-  }
-  svg.progress-ring{ width:100%; height:100%; transform:rotate(-90deg) } /* start at 12 o’clock */
-  #ringTrack { stroke: var(--ring-track); stroke-width: .9; fill: none; }
-  #ring      { stroke: var(--ring-color);  stroke-width: .9; stroke-linecap: round; fill: none; }
-
-  /* ================= CONTENT ================= */
-  .wrap{ max-width:var(--max); margin:0 auto; padding:40px 18px }
-  .section{ margin:42px 0 }
-  .section h2{
-    font-family:"Crimson Text",serif; font-weight:600; font-size:clamp(18px, 2.2vw, 22px); margin:0 0 12px;
-  }
-  .section p{ margin:0 0 16px; line-height:1.85 }
-  .links a{ color:inherit; text-decoration:none; border-bottom:1px solid #111 }
-  .links a:hover{ opacity:.7 }
-
-  .gallery{ display:grid; gap:12px; grid-template-columns:1fr; margin:24px 0 8px }
-  .gallery img{ width:100%; height:auto; display:block }
-  @media (min-width:740px){ .gallery{ grid-template-columns:1fr 1fr 1fr } }
-
-  @media (min-width:1200px){
-    .wrap{ padding:56px 24px }
-    .section{ margin:56px 0 }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .slide{ transition:none }
-  }
-</style>
 </head>
 <body>
 
   <!-- Right-side drawer (mobile menu) -->
   <aside class="drawer" id="drawer" aria-hidden="true">
-    <button class="close" id="closeDrawer" aria-label="Close">✕</button>
-    <header>Art & Science MNL</header>
+    <!-- Close: minus icon (positioned top-right by styles.css) -->
+    <button class="close" id="closeDrawer" aria-label="Close menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+
+    <header>ART &amp; SCIENCE</header>
     <nav>
       <a href="#top" onclick="closeDrawer()">Home</a>
       <a href="#about" onclick="closeDrawer()">About</a>
@@ -176,15 +37,15 @@
 
   <!-- Overlay nav -->
   <div class="nav" id="top">
-    <div class="brand">Art & Science MNL</div>
+    <div class="brand">ART &amp; SCIENCE</div>
 
     <!-- Desktop menu (centered) -->
     <nav class="menu" aria-label="Primary">
-      <a href="#top">Home</a>
-      <a href="#about">About</a>
-      <a href="#programs">Programs</a>
-      <a href="#contact">Information</a>
-      <a href="https://facebook.com/ArtScienceMNL" target="_blank" rel="noopener">Facebook</a>
+      <a data-slide="0" href="#top">Home</a>
+      <a data-slide="1" href="#about">About</a>
+      <a data-slide="2" href="#programs">Programs</a>
+      <a data-slide="3" href="#contact">Information</a>
+      <a data-slide="4" href="https://facebook.com/ArtScienceMNL" target="_blank" rel="noopener">Facebook</a>
     </nav>
 
     <div class="actions">
@@ -210,16 +71,17 @@
   <header class="hero" aria-label="Hero">
     <div class="media">
       <div class="slides" id="slides">
-        <!-- Labels appear inside the circle -->
         <figure class="slide active" data-label="Home"><img src="assets/hero-1.jpg" alt="Art & Science MNL hero image 1"></figure>
         <figure class="slide" data-label="About"><img src="assets/hero-2.jpg" alt="Art & Science MNL hero image 2"></figure>
         <figure class="slide" data-label="Programs"><img src="assets/hero-3.jpg" alt="Art & Science MNL hero image 3"></figure>
+        <figure class="slide" data-label="Information"><img src="assets/hero-4.jpg" alt="Information hero"></figure>
+        <figure class="slide" data-label="Facebook"><img src="assets/hero-5.jpg" alt="Facebook hero"></figure>
       </div>
 
       <div class="circle-ui" aria-hidden="true">
         <svg class="progress-ring" viewBox="0 0 120 120" role="img" aria-label="Progress ring">
-          <circle id="ringTrack" cx="60" cy="60" r="56"></circle> <!-- static track -->
-          <circle id="ring"      cx="60" cy="60" r="56" stroke-dasharray="0 352" stroke-dashoffset="0"></circle> <!-- ticking progress -->
+          <circle id="ringTrack" cx="60" cy="60" r="56"></circle>
+          <circle id="ring"      cx="60" cy="60" r="56" stroke-dasharray="0 352" stroke-dashoffset="0"></circle>
         </svg>
         <div class="circle-text" id="circleText">Home</div>
       </div>
@@ -253,74 +115,95 @@
     </section>
   </main>
 
-<script>
-  // ===== Drawer (mobile) =====
-  const drawer = document.getElementById('drawer');
-  const openDrawerBtn = document.getElementById('openDrawer');
-  const closeDrawerBtn = document.getElementById('closeDrawer');
-  function openDrawer(){ drawer.classList.add('open'); document.body.style.overflow='hidden'; }
-  function closeDrawer(){ drawer.classList.remove('open'); document.body.style.overflow=''; }
-  openDrawerBtn.addEventListener('click', openDrawer);
-  closeDrawerBtn && closeDrawerBtn.addEventListener('click', closeDrawer);
-  document.addEventListener('click', (e)=>{
-    if (!drawer.classList.contains('open')) return;
-    const inside = drawer.contains(e.target) || openDrawerBtn.contains(e.target);
-    if (!inside) closeDrawer();
-  });
-  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeDrawer(); });
+  <script>
+    // ===== Drawer (mobile) =====
+    const drawer = document.getElementById('drawer');
+    const openDrawerBtn = document.getElementById('openDrawer');
+    const closeDrawerBtn = document.getElementById('closeDrawer');
 
-  // ===== Slideshow + ticking circle =====
-  const slides = Array.from(document.querySelectorAll('.slide'));
-  const circleText = document.getElementById('circleText');
-  const ring = document.getElementById('ring');
+    function openDrawer(){ drawer.classList.add('open'); document.body.style.overflow='hidden'; }
+    function closeDrawer(){ drawer.classList.remove('open'); document.body.style.overflow=''; }
 
-  const duration = 6500;     // ms per full rotation / slide
-  const stepMs = 110;        // tick granularity
-  const r = 56;
-  const C = 2 * Math.PI * r;
-  let idx = 0;
-  let t0 = null;
-  let timer = null;
+    openDrawerBtn.addEventListener('click', openDrawer);
+    closeDrawerBtn && closeDrawerBtn.addEventListener('click', closeDrawer);
 
-  function showSlide(i){
-    slides.forEach(s => s.classList.remove('active'));
-    slides[i].classList.add('active');
-    circleText.textContent = slides[i].dataset.label || '';
-  }
+    // click outside to close
+    document.addEventListener('click', (e)=>{
+      if (!drawer.classList.contains('open')) return;
+      const inside = drawer.contains(e.target) || openDrawerBtn.contains(e.target);
+      if (!inside) closeDrawer();
+    });
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeDrawer(); });
 
-  function resetRing(){
-    ring.style.strokeDasharray = `0 ${C}`;
-  }
+    // ===== Slideshow + ticking circle =====
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const circleText = document.getElementById('circleText');
+    const ring = document.getElementById('ring');
 
-  function tick(){
-    const now = performance.now();
-    if(t0 === null) t0 = now;
-    const elapsed = now - t0;
-    const p = Math.min(1, elapsed / duration);
-    const steps = Math.floor(duration / stepMs);
-    const stepped = Math.floor(p * steps) / steps;
-    const dash = stepped * C;
+    const duration = 6500;     // ms per full rotation / slide
+    const stepMs = 110;        // tick granularity
+    const r = 56;
+    const C = 2 * Math.PI * r;
+    let idx = 0;
+    let t0 = null;
+    let timer = null;
+    let paused = false;
 
-    ring.style.strokeDasharray = `${dash} ${C}`;
-
-    if(p >= 1){
-      idx = (idx + 1) % slides.length;
-      showSlide(idx);
-      t0 = null;
-      resetRing();
+    function showSlide(i){
+      slides.forEach(s => s.classList.remove('active'));
+      slides[i].classList.add('active');
+      circleText.textContent = slides[i].dataset.label || '';
     }
-    timer = setTimeout(()=>requestAnimationFrame(tick), stepMs);
-  }
 
-  function start(){
-    resetRing();
-    showSlide(idx);
-    if(timer) clearTimeout(timer);
-    t0 = null;
-    requestAnimationFrame(tick);
-  }
+    function resetRing(){
+      ring.style.strokeDasharray = `0 ${C}`;
+    }
 
-  if(slides.length){ start(); }
-</script>
+    function tick(){
+      if (paused) return;
+      const now = performance.now();
+      if(t0 === null) t0 = now;
+      const elapsed = now - t0;
+      const p = Math.min(1, elapsed / duration);
+      const steps = Math.floor(duration / stepMs);
+      const stepped = Math.floor(p * steps) / steps;
+      const dash = stepped * C;
+
+      ring.style.strokeDasharray = `${dash} ${C}`;
+
+      if(p >= 1){
+        idx = (idx + 1) % slides.length;
+        showSlide(idx);
+        t0 = null;
+        resetRing();
+      }
+      timer = setTimeout(()=>requestAnimationFrame(tick), stepMs);
+    }
+
+    function start(){
+      resetRing();
+      showSlide(idx);
+      if(timer) clearTimeout(timer);
+      t0 = null; paused = false;
+      requestAnimationFrame(tick);
+    }
+
+    if(slides.length){ start(); }
+
+    // ===== Nav hover swaps hero (desktop) =====
+    const hoverLinks = document.querySelectorAll('.menu a[data-slide]');
+    const menu = document.querySelector('.menu');
+    function pause(){ paused = true; if (timer){ clearTimeout(timer); timer=null; } }
+    function resume(){ if (!paused) return; paused = false; t0 = null; requestAnimationFrame(tick); }
+
+    hoverLinks.forEach(link => {
+      const i = parseInt(link.dataset.slide, 10);
+      link.addEventListener('mouseenter', ()=>{ pause(); idx = i; showSlide(idx); resetRing(); });
+      link.addEventListener('focus',      ()=>{ pause(); idx = i; showSlide(idx); resetRing(); });
+      link.addEventListener('mouseleave', resume);
+      link.addEventListener('blur',       resume);
+    });
+    menu && menu.addEventListener('mouseleave', resume);
+  </script>
 </body>
 </html>

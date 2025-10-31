@@ -1,0 +1,207 @@
+/* ===============================
+   Art & Science MNL — Site Styles
+   (Nunito Sans only for brand/logo)
+   =============================== */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&display=swap');
+
+/* ---------- Variables ---------- */
+:root{
+  --text:#111; --muted:#888; --link:#fff;
+
+  --nav-h:64px;
+  --nav-h-desktop:76px;
+  --max:1200px;
+
+  /* Circle / ring (you can tweak these) */
+  --circle-size: min(60vmin, 880px);   /* smaller circle than before */
+  --ring-w: .65;                       /* thinner stroke */
+  --ring-color: rgba(255,255,255,.96);
+  --ring-track: rgba(255,255,255,.35);
+
+  /* hero image overhang (to hide sub-pixel seams) */
+  --bleed-left: 4vw;                   /* mobile */
+  --bleed-right: 4vw;
+}
+@media (min-width:980px){
+  :root{ --bleed-left: 2.5vw; --bleed-right: 2.5vw; }
+}
+
+/* ---------- Reset / base ---------- */
+*{ box-sizing:border-box }
+html,body{ margin:0; padding:0; overflow-x:hidden }
+figure{ margin:0 }
+img{ max-width:100%; height:auto; display:block }
+
+body{
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color:var(--text); background:#fff; line-height:1.75;
+}
+
+/* ================= NAV ================= */
+.nav{
+  position:absolute; inset:0 0 auto 0; height:var(--nav-h);
+  display:flex; align-items:center; justify-content:space-between;
+  padding: env(safe-area-inset-top) 20px 0 20px;
+  z-index:5;
+}
+
+/* Brand: Nunito Sans, expanded, white over hero */
+.brand{
+  font-family:"Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight:900;
+  letter-spacing:.18em;
+  color:#fff;
+  text-shadow:0 1px 10px rgba(0,0,0,.22);
+  font-size:clamp(18px, 2.6vw, 24px);
+}
+
+.menu{ display:none; }
+.actions{ display:flex; gap:18px; align-items:center }
+
+.icon-btn{
+  background:none; border:0; color:#fff; cursor:pointer;
+  width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.icon path, .icon circle, .icon line{ stroke:#fff; stroke-width:2; fill:none; stroke-linecap:round; stroke-linejoin:round }
+
+/* Desktop nav (centered links in serif like inspo) */
+@media (min-width:980px){
+  .nav{
+    display:grid; grid-template-columns: 1fr auto 1fr;
+    height:var(--nav-h-desktop); padding:0 28px;
+  }
+  .menu{
+    display:flex; align-items:center; justify-content:center; gap:22px;
+    font-family:"Crimson Text", serif; font-size:20px;
+  }
+  .menu a{ color:#fff; text-decoration:none; opacity:.95; text-shadow:0 1px 10px rgba(0,0,0,.22) }
+  .menu a:hover{ opacity:.7 }
+  .brand{ justify-self:start }
+  .actions{ justify-self:end }
+}
+
+/* ========== Drawer: off-screen with no right-edge sliver ========== */
+.drawer{
+  position: fixed;
+  inset: 0 0 0 auto;                  /* dock to the right */
+  width: min(86vw, 360px);
+  z-index: 30;
+  display: flex; flex-direction: column;
+  transition: transform .28s ease;
+
+  /* sliver killers */
+  box-sizing: border-box;
+  border-left: 0;                      /* no border while hidden */
+  right: -6px;                         /* push a bit off-screen */
+  transform: translateX(calc(100% + 6px));
+  will-change: transform;
+  background: transparent;             /* hidden state = transparent */
+}
+.drawer.open{
+  right: 0;                            /* align to edge when open */
+  transform: none;
+  border-left: 1px solid #eee;         /* border only when visible */
+  background: #fff;                    /* visible state = white */
+}
+
+/* Close/minus button in same corner as burger */
+.drawer .close{
+  position:absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  right: 20px;                         /* match nav padding */
+  z-index:2;
+
+  margin:0; background:none; border:0; cursor:pointer;
+  width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+}
+.drawer .close line{ stroke:#111; stroke-width:2; stroke-linecap:round }
+
+/* Drawer content */
+.drawer header{
+  padding: calc(env(safe-area-inset-top, 0px) + 56px) 18px 4px;
+  font-family:"Crimson Text",serif; letter-spacing:.18em;
+  color:#111; text-shadow:none;
+}
+.drawer nav{ display:flex; flex-direction:column; gap:16px; padding:8px 18px 18px }
+.drawer a{
+  color:#111; text-decoration:none; border-bottom:1px solid #111; width:fit-content;
+  font-family:"Crimson Text", serif; font-size:22px;
+}
+
+/* ================= HERO + SLIDES ================= */
+.hero{ position:relative }
+
+/* clip edges (prevents faint right edge) */
+.hero .media{
+  position: relative;
+  aspect-ratio: 16 / 9;
+  min-height: 58vh;
+  overflow: hidden;
+}
+@supports (overflow: clip){
+  .hero .media{ overflow: clip; }
+}
+@media (max-width:979.98px){
+  .hero .media{ aspect-ratio:auto; height:100svh; min-height:100svh; }
+}
+
+.slides{ position:absolute; inset:0; z-index:1 }
+.slide{ position:absolute; inset:0; margin:0; opacity:0; transition:opacity 900ms ease; }
+.slide.active{ opacity:1 }
+
+/* Seam-free hero image: always wider than viewport, centered */
+.slide img{
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);   /* center the image */
+  height: 100%;
+  width: calc(100vw + 24px);     /* slightly wider than viewport */
+  max-width: none;
+  object-fit: cover;
+  display: block;
+}
+
+/* ============ Circle + Track + Label ============ */
+.circle-ui{
+  position:absolute; left:50%; top:50%;
+  width:var(--circle-size); height:var(--circle-size);
+  transform:translate(-50%,-50%);
+  z-index:3; pointer-events:none; display:grid; place-items:center;
+}
+.circle-text{
+  position:absolute; color:#fff; font-family:"Crimson Text",serif;
+  font-size:clamp(22px, 3.0vw, 36px); letter-spacing:.02em; text-align:center;
+  text-shadow:0 2px 14px rgba(0,0,0,.25);
+}
+
+/* Ring: thinner & flat ends (flat ends make a perfect closure) */
+svg.progress-ring{ width:100%; height:100%; transform:rotate(-90deg) }
+#ringTrack { stroke: var(--ring-track); stroke-width: var(--ring-w); fill: none; }
+#ring      { stroke: var(--ring-color);  stroke-width: var(--ring-w); stroke-linecap: butt; fill: none; }
+
+/* ================= CONTENT ================= */
+.wrap{ max-width:var(--max); margin:0 auto; padding:40px 18px }
+.section{ margin:42px 0 }
+.section h2{
+  font-family:"Crimson Text",serif; font-weight:600; font-size:clamp(18px, 2.2vw, 22px); margin:0 0 12px;
+}
+.section p{ margin:0 0 16px; line-height:1.85 }
+.links a{ color:inherit; text-decoration:none; border-bottom:1px solid #111 }
+.links a:hover{ opacity:.7 }
+
+.gallery{ display:grid; gap:12px; grid-template-columns:1fr; margin:24px 0 8px }
+.gallery img{ width:100%; height:auto; display:block }
+@media (min-width:740px){ .gallery{ grid-template-columns:1fr 1fr 1fr } }
+
+@media (min-width:1200px){
+  .wrap{ padding:56px 24px }
+  .section{ margin:56px 0 }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .drawer{ transition:none }
+  .slide{ transition:none }
+}
