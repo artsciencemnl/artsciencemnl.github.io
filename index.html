@@ -6,11 +6,11 @@
   <title>Art & Science MNL</title>
   <meta name="description" content="Art & Science MNL · Micro:bit and DeskPi MicroCar coding lab for kids in Makati City." />
 
-  <!-- Brand & typefaces (Inter for site, Nunito Sans only for logo/drawer header) -->
+  <!-- Fonts: Inter for site; Nunito Sans only for brand wordmark -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito+Sans:wght@800;900&display=swap" rel="stylesheet">
 
   <!-- Site styles (cache-busted) -->
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
 
   <!-- Font scoping: Inter everywhere; Nunito ONLY for .brand and drawer header -->
   <style>
@@ -39,11 +39,11 @@
     </button>
 
     <header>ART &amp; SCIENCE</header>
-    <nav>
-      <a href="#top"      onclick="closeDrawer()">Home</a>
-      <a href="#about"    onclick="closeDrawer()">About</a>
-      <a href="#course"   onclick="closeDrawer()">Course</a>
-      <a href="#info"     onclick="closeDrawer()">Information</a>
+    <nav aria-label="Mobile">
+      <a href="#top"    onclick="closeDrawer()">Home</a>
+      <a href="#about"  onclick="closeDrawer()">About</a>
+      <a href="#course" onclick="closeDrawer()">Coding Lab</a>
+      <a href="#info"   onclick="closeDrawer()">Information</a>
       <a href="https://facebook.com/ArtScienceMNL" target="_blank" rel="noopener" onclick="closeDrawer()">Facebook</a>
     </nav>
   </aside>
@@ -56,9 +56,10 @@
     <nav class="menu" aria-label="Primary">
       <a data-slide="0" href="#top">Home</a>
       <a data-slide="1" href="#about">About</a>
-      <a data-slide="2" href="#course">Course</a>
+      <a data-slide="2" href="#course">Coding Lab</a>
       <a data-slide="3" href="#info">Information</a>
-      <a data-slide="4" href="https://facebook.com/ArtScienceMNL" target="_blank" rel="noopener">Facebook</a>
+      <!-- No data-slide on external link to avoid hero collision -->
+      <a href="https://facebook.com/ArtScienceMNL" target="_blank" rel="noopener">Facebook</a>
     </nav>
 
     <div class="actions">
@@ -86,7 +87,7 @@
       <div class="slides" id="slides">
         <figure class="slide active" data-label="Home"><img src="assets/hero-1.jpg" alt="Art & Science MNL hero image 1"></figure>
         <figure class="slide" data-label="About"><img src="assets/hero-2.jpg" alt="Art & Science MNL hero image 2"></figure>
-        <figure class="slide" data-label="Course"><img src="assets/hero-3.jpg" alt="Art & Science MNL Coding Course"></figure>
+        <figure class="slide" data-label="Coding Lab"><img src="assets/hero-3.jpg" alt="Art & Science MNL Coding Lab"></figure>
         <figure class="slide" data-label="Information"><img src="assets/hero-4.jpg" alt="Information hero"></figure>
         <figure class="slide" data-label="Facebook"><img src="assets/hero-5.jpg" alt="Facebook hero"></figure>
       </div>
@@ -105,7 +106,7 @@
   <main class="wrap">
     <!-- ABOUT -->
     <section id="about" class="section">
-      <h2>Robotics & Creative Science for Kids</h2>
+      <h2>Robotics & Creative Science for Kids in Makati</h2>
       <p>
         At <strong>Art & Science MNL</strong>, we introduce children ages 5 to 12 to robotics, coding, and creative science.
         We use the friendly <em>micro:bit</em> and the DeskPi MicroCar to teach real problem solving through fun builds and challenges.
@@ -156,11 +157,11 @@
     <section id="info" class="section">
       <h2>Information</h2>
 
-     <h3>Schedules</h3>
-<ul>
-  <li><strong>Cycle A</strong> · Wed 4:00 PM to 5:00 PM</li>
-  <li><strong>Cycle B</strong> · Sat 10:00 AM to 11:00 AM</li>
-</ul>
+      <h3>Schedules</h3>
+      <ul>
+        <li><strong>Cycle A</strong> · Wed 4:00 PM to 5:00 PM</li>
+        <li><strong>Cycle B</strong> · Sat 10:00 AM to 11:00 AM</li>
+      </ul>
 
       <h3>Venue</h3>
       <ul>
